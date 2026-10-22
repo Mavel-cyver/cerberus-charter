@@ -1,0 +1,19 @@
+{
+  "name": "cerberus-charter",
+  "version": "1.0.0",
+  "description": "Builds one EAS attestation payload that puts the Charter, the Constitution and the SOUL texts on chain",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --test --experimental-strip-types --experimental-test-coverage test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}
