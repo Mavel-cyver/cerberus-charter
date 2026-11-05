@@ -89,3 +89,13 @@ test('encoded changes when a text changes', () => {
   const b = buildAttestation({ ...INPUT, texts: { ...INPUT.texts, soul: 'SOUL text!' } }).encoded;
   assert.notEqual(a, b);
 });
+
+test('encodeAttestation rejects a negative date and a malformed bytes32', () => {
+  const base = {
+    version: '1.0.0', date: 1, charterDigest: '0x' + '11'.repeat(32),
+    constitutionDigest: '0x' + '22'.repeat(32), soulDigest: '0x' + '33'.repeat(32),
+    charterCid: 'a', constitutionCid: 'b', soulCid: 'c',
+  };
+  assert.throws(() => encodeAttestation({ ...base, date: -1 }));
+  assert.throws(() => encodeAttestation({ ...base, charterDigest: '0x1234' }));
+});
