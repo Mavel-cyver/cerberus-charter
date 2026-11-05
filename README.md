@@ -20,7 +20,7 @@ Builds one EAS attestation payload that puts the Founding Charter, the Constitut
     npm install
     npm test
 
-Eight tests cover the digests, the data, the stable schema, a changed text, missing texts and cids, a bad version, and bad dates. Coverage is 100% of lines, branches and functions.
+Eleven tests cover the digests, the data, the stable schema, a changed text, missing texts and cids, a bad version, bad dates, and the ABI encoding. Coverage is 100% of lines and functions and more than 96% of branches; the uncovered branch is the negative-value guard in `word()` in abi.ts, which the public entry point cannot reach because the date is validated before encoding.
 
 ## Scope
 
