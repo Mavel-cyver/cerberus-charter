@@ -29,4 +29,6 @@ export interface Attestation {
   data: AttestationData;
   /** sha256 hex of each text (lowercase, no 0x prefix), keyed by document. */
   digests: Record<DocumentKey, string>;
+  /** ABI encoded attestation data (0x-prefixed), the bytes passed to EAS for this schema. */
+  encoded: string;
 }

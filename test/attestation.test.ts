@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { buildAttestation, type AttestationInput } from '../src/index.ts';
+import { buildAttestation, encodeAttestation, type AttestationInput } from '../src/index.ts';
 
 const sha = (s: string) => createHash('sha256').update(s, 'utf8').digest('hex');
 
@@ -65,4 +65,27 @@ test('rejects a bad version', () => {
 test('rejects a bad date', () => {
   assert.throws(() => buildAttestation({ ...INPUT, date: '14.11.2026' }), /date/);
   assert.throws(() => buildAttestation({ ...INPUT, date: '2026-02-30' }), /date/);
+});
+
+// Reference vector from eth_abi (Python) for the schema, with the values below.
+const REFERENCE_ENCODED = '0x0000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000006af7a4801111111111111111111111111111111111111111111111111111111111111111222222222222222222222222222222222222222222222222222222222222222233333333333333333333333333333333333333333333333333333333333333330000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000018000000000000000000000000000000000000000000000000000000000000001c00000000000000000000000000000000000000000000000000000000000000005312e302e30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b6261667943686172746572000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001062616679436f6e737469747574696f6e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000862616679536f756c000000000000000000000000000000000000000000000000';
+
+test('encoded matches the reference ABI encoding of the schema', () => {
+  const r = encodeAttestation({
+    version: '1.0.0',
+    date: 1794614400,
+    charterDigest: '0x' + '11'.repeat(32),
+    constitutionDigest: '0x' + '22'.repeat(32),
+    soulDigest: '0x' + '33'.repeat(32),
+    charterCid: 'bafyCharter',
+    constitutionCid: 'bafyConstitution',
+    soulCid: 'bafySoul',
+  });
+  assert.equal(r, REFERENCE_ENCODED);
+});
+
+test('encoded changes when a text changes', () => {
+  const a = buildAttestation(INPUT).encoded;
+  const b = buildAttestation({ ...INPUT, texts: { ...INPUT.texts, soul: 'SOUL text!' } }).encoded;
+  assert.notEqual(a, b);
 });

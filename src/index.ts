@@ -1,6 +1,8 @@
 import { createHash } from 'node:crypto';
-import { DOCUMENT_KEYS, type Attestation, type AttestationInput, type DocumentKey } from './types.ts';
+import { encodeAttestation } from './abi.ts';
+import { DOCUMENT_KEYS, type Attestation, type AttestationData, type AttestationInput, type DocumentKey } from './types.ts';
 
+export { encodeAttestation } from './abi.ts';
 export type { Attestation, AttestationData, AttestationInput, DocumentKey } from './types.ts';
 
 /** Schema string of the attestation. Changing it changes the attestation type, so keep it stable. */
@@ -49,18 +51,15 @@ export function buildAttestation(input: AttestationInput): Attestation {
 
   const date = parseDate(input.date);
 
-  return {
-    schema: SCHEMA,
-    data: {
-      version,
-      date,
-      charterDigest: '0x' + digests.charter,
-      constitutionDigest: '0x' + digests.constitution,
-      soulDigest: '0x' + digests.soul,
-      charterCid: cids.charter,
-      constitutionCid: cids.constitution,
-      soulCid: cids.soul,
-    },
-    digests,
+  const data: AttestationData = {
+    version,
+    date,
+    charterDigest: '0x' + digests.charter,
+    constitutionDigest: '0x' + digests.constitution,
+    soulDigest: '0x' + digests.soul,
+    charterCid: cids.charter,
+    constitutionCid: cids.constitution,
+    soulCid: cids.soul,
   };
+  return { schema: SCHEMA, data, digests, encoded: encodeAttestation(data) };
 }

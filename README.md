@@ -24,4 +24,4 @@ Eight tests cover the digests, the data, the stable schema, a changed text, miss
 
 ## Scope
 
-Only the payload is built here. Making the attestation on chain is a separate step and needs its own signer.
+The payload is built and ABI encoded here (`encoded`, bytes for EAS). Licence: MIT (see LICENSE). Making the attestation on chain is a separate step and needs its own signer.
